@@ -34,20 +34,20 @@ def extract_text(input_file,output_file):
 	all_questions=[]
 	all_answers=[]
 	doc=fitz.open(input_file)
-	text=''
 	for page in doc:
-		text+=page.getText()
-	text_a=text.replace(' ','')
-	answers=re.findall(r'([1-9][\d]+[.][(][\d\*][)][\n1-9])',text_a)
-	questions=re.findall(r'[\d]+[.][\s]*[A-Z][\w\W-]+?[\w][\s][(][^0-9]',text)
-	questions=[question.replace('\n',' ').replace('- ','') for question in questions]
-	all_questions+=questions
-	all_answers+=answers
+		text=page.getText()
+		text_a=text.replace(' ','')
+		answers=re.findall(r'([\d]+[.][(][\d\*][)][\n0-9])',text_a)
+		questions=re.findall(r'[\d]+[.][\s][A-Z][\w\W-]+?[\w][\s][(][^0-9]',text)
+		questions=[question.replace('\n',' ').replace('- ','') for question in questions]
+		all_questions+=questions
+		all_answers+=answers
 	
 	all_questions=[question for question in all_questions if '(1)' in question and '(2)' in question and '(3)' in question and '(4)' in question and question.count('.')<10]
+	
 	i=0
 	while i<len(all_questions) :
-		#if re.match(r'[\d]+?[.]',all_questions[i]).group()==re.match(r'[\d]+?[.]',all_answers[j]).group(): # I had to remove this filter as I was get a very low number of questions extracted from it that too with incorrect answers due to the typos presemt in the book. If not for those typos I would have extracted all the extractable questions with answers the given solution does not contain correct answers to the question but it extracts 9860 questions and their options correctly
+		#if re.match(r'[\d]+?[.]',all_questions[i]).group()==re.match(r'[\d]+?[.]',all_answers[j]).group(): # I had to remove this filter as I was get a very low number of questions extracted from it that too with incorrect answers due to the typos presemt in the book. If not for those typos I would have extracted all the extractable questions with answers the given solution does not contain correct answers to the question but it extracts 9366 questions and their options correctly
 		question1=Question()
 		question1.get_values(all_questions[i],all_answers[i])
 		extracted_data.append(question1.__dict__())
