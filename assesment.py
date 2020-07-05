@@ -18,7 +18,7 @@ class Question():
 		self.option2=re.match(r'[\w\W]+[\s]*[(][2][)][\s]*([\w\W]+?)[(]',question).group(1)
 		self.option3=re.match(r'[\w\W]+[\s]*[(][3][)][\s]*([\w\W]+?)[(]',question).group(1)
 		self.option4=re.match(r'[\w\W]+[\s]*[(][4][)][\s]*([\w\W]+?)[(]',question).group(1)
-		self.question=re.match(r'[\d]+[.][\s]([A-Z][\w\W-]+?)[(]',question).group(1)
+		self.question=re.match(r'[\d]+[.][\s]*([A-Z][\w\W-]+?)[(]',question).group(1)
 	def __str__(self):
 		return str({'Question':self.question,'Option_A':self.option1,'Option_B':self.option2,'Option_C':self.option3,'Option_D':self.option4,'Answer':self.answer})
 	def __dict__(self):
@@ -26,7 +26,8 @@ class Question():
 def extract_text(input_file,output_file):
 	''' Extracts text from a given PDF file and extracts questions and options from a pdf file.
 		param:
-			file: PDF file
+			input_file: PDF file
+			output_file: JSON file
 		return:
 			JSON file with Inputted file name'''
 	extracted_data=[]
@@ -37,7 +38,7 @@ def extract_text(input_file,output_file):
 		text=page.getText()
 		text_a=text.replace(' ','')
 		answers=re.findall(r'([\d]+[.][(][\d\*][)][\n0-9])',text_a)
-		questions=re.findall(r'[\d]+[.][\s][A-Z][\w\W-]+?[\w][\s][(][^0-9]',text)
+		questions=re.findall(r'[\d]+[.][\s]*[A-Z][\w\W-]+?[\w][\s][(][^0-9]',text)
 		questions=[question.replace('\n',' ').replace('- ','') for question in questions]
 		all_questions+=questions
 		all_answers+=answers
